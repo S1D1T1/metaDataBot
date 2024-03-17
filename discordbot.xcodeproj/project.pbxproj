@@ -29,6 +29,7 @@
 		82C943472BA3DF84002AED2A /* discordbot */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = discordbot; sourceTree = BUILT_PRODUCTS_DIR; };
 		82C943592BA4FA8D002AED2A /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		82C9435F2BA60240002AED2A /* image processing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "image processing.swift"; sourceTree = "<group>"; };
+		82D2433B2BA7607000B22D0F /* notes.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = notes.rtf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,6 +47,7 @@
 		82C9433E2BA3DF84002AED2A = {
 			isa = PBXGroup;
 			children = (
+				82D2433B2BA7607000B22D0F /* notes.rtf */,
 				82C943602BA60240002AED2A /* source */,
 				82C943592BA4FA8D002AED2A /* .gitignore */,
 				82C943482BA3DF84002AED2A /* Products */,
