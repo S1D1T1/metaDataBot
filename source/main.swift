@@ -25,8 +25,15 @@ class ExifbotState {
 
   init() {
     let  myIntents:Set<Intents> = [.guildMessages,.messageContent,.dmMessages]
-    self.bot = Bot(token: "token removed", intents: myIntents)
+    guard  let token = ProcessInfo.processInfo.environment["METADATABOT_DISCORD_TOKEN"] else {
+      print("Could not retrieve confidential token from environment variable: METADATABOT_DISCORD_TOKEN")
+      print("Exiting")
+      exit(0)
+    }
+    self.bot = Bot(token: token, intents: myIntents)
     self.bot.once {
+
+      // set status when connected
       let presenceString = "Pics, posting params"
       self.bot.updatePresence(status:.online , activity:.watching(presenceString))
     }
@@ -89,14 +96,14 @@ func runbot() {
   try! bot.addListeners(ExifbotListener(name: "exifbot"))
 
 
-  bot.addSlashCommand(
-      name: "exifcommand",
-      description: "Example command",
-      guildId: nil,
-      onInteraction: { interaction in
-          try! await interaction.respondWithMessage("sample slash command", ephemeral: true)
-      }
-  )
+//  bot.addSlashCommand(
+//      name: "exifcommand",
+//      description: "Example command",
+//      guildId: nil,
+//      onInteraction: { interaction in
+//          try! await interaction.respondWithMessage("sample slash command", ephemeral: true)
+//      }
+//  )
 
 //  Task{
 //    try! await bot.syncApplicationCommands() // Only needs to be done once
@@ -130,10 +137,7 @@ class ExifbotListener : EventListener {
     message.channel.bot?.updatePresence(status:.online , activity:.watching(presenceString))
   }
 
-  func onReady(me: ClientUser){
-    print("called onready")// this never gets called
-  }
-
+  // perform the 'lastimage' command. search back through that channel & retro-analyze
   func lastImage(_ message:Message) async{
     do {
       let pastMessages = try await message.channel.history()
@@ -153,7 +157,7 @@ class ExifbotListener : EventListener {
     catch {}
   }
 
-
+//  post metadata of the image attached to this message, in this channel
   func processImage(_ attachment: Message.Attachment, _ message: Message) {
 
     if let u = URL(string: attachment.url) {
@@ -164,6 +168,7 @@ class ExifbotListener : EventListener {
     }
   }
 
+  //  watch messages & respond
   override func onMessageCreate(message: Message) async {
     // Don't respond to our own message
     guard !message.author.isBot else {
@@ -259,6 +264,7 @@ func sendAsFile(_ s:String,filename:String = "metadata.txt",_ channel:Messageabl
   }
 }
 
+// lets talk about me.
 func aboutExifBot(_ channel:Messageable){
   var sayString = aboutString
   sayString.append("\n\(exifbotState.imageCount) Images processed, Since starting on \(exifbotState.startDate)\n")
@@ -278,5 +284,3 @@ func log(_ s:String, _ channel:Messageable? = nil){
   exifbotState.saveLogString.append("\(logString)\n")
 }
 
-
- 

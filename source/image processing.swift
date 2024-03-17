@@ -12,6 +12,7 @@ import AppKit //  Core graphics
 
 // MARK: Image Metadata parsing
 
+// post metadata about the image at this url, in the provided channel
 func handleImage(_ u:URL, _ channel:Messageable){
   if let params =   getEmbeddedParamString(u) {
     if let dictionary = JsonStringtoDict(params) {
@@ -34,6 +35,8 @@ func handleImage(_ u:URL, _ channel:Messageable){
   }
 }
 
+// translation table for parameters which are in well-formed json.
+// "c" -> "prompt" and "uc" -> "negative_prompt". Currently all other params passed straight through
 func translateParams(_ dictionary:[String:Any]) -> [String:Any] {
   var returnVal = [String:Any]()
 
@@ -49,6 +52,10 @@ func translateParams(_ dictionary:[String:Any]) -> [String:Any] {
   return returnVal
 }
 
+
+// try various methods of extracting metadata.
+// 1st choice: EXIF UserComment.
+// 2d choice - TIFF ImageDescription
 func getEmbeddedParamString(_ url: URL) -> String? {
   guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else {
     print("Error: Could not create image source from url")
@@ -83,27 +90,6 @@ func JsonStringtoDict(_ string:String) -> [String:Any]?{
   return nil
 }
 
-func prettyPrintParams(_ rawText: String) -> String {
-    var isInParens = false
-    var outString = ""
-
-    var chars = rawText.makeIterator()
-    while let char = chars.next() {
-        if char == ","  && !isInParens {
-          outString.append("\n")
-        } else if char == "(" {
-            isInParens = true
-          outString.append(char)
-
-        } else if char == ")" {
-            isInParens = false
-          outString.append(char)
-        } else {
-          outString.append(char)
-        }
-    }
-    return outString
-}
 
 /// extract prompt, neg prompt, & params. straightup json. NO translation, or filtering
 func announceDescriptionString(_ desc:String, _ channel:Messageable) {
@@ -170,6 +156,29 @@ func announceDescriptionString(_ desc:String, _ channel:Messageable) {
   return
 }
 
+// manually format this json, because embedded comma in this one parameter breaks everything:
+//  crop: (0,0)
+func prettyPrintParams(_ rawText: String) -> String {
+    var isInParens = false
+    var outString = ""
+
+    var chars = rawText.makeIterator()
+    while let char = chars.next() {
+        if char == ","  && !isInParens {
+          outString.append("\n")
+        } else if char == "(" {
+            isInParens = true
+          outString.append(char)
+
+        } else if char == ")" {
+            isInParens = false
+          outString.append(char)
+        } else {
+          outString.append(char)
+        }
+    }
+    return outString
+}
 /// Gamify. Create Engagement.
 func trackParameterHighScore(_ score:Int, channel: Messageable) {
   if score > exifbotState.maxParameters {
