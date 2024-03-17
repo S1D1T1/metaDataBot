@@ -35,6 +35,9 @@ metaDataBot looks for EXIF data in the image, which is usually (but not always? 
 
 metadata is posted as an attached text file
 
+### Building  
+You can build the bot in xcode from this source, but it won't be able to log in to discord - the confidential token has been removed. There can be only one.
+
 ### Acknowledments
 
 The awesome community on the [Draw Things discord.](https://discord.gg/Zx9VXSqQUK)  
