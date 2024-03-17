@@ -3,7 +3,7 @@ Discord Bot for displaying metadata (image parameters) of posted images
 
 Based on [Defxult/Discord Bot](https://github.com/Defxult/Discord.swift)
 
-ParamPeek can post the image generation parameters, stored in the metadata of an image when it's posted to your Discord server.
+This bot can post the image generation parameters, stored in the metadata of an image when it's posted to your Discord server.
 
 metaDataBot is public. To install on your server search for "ParamPeek", Discord AppID: 1218037339276836997
 metaDataBot runs on MacOS
