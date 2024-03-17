@@ -3,9 +3,9 @@ Discord Bot that displays the DNA of an AI generated image.
 
 Built on [Defxult/Discord Bot](https://github.com/Defxult/Discord.swift)
 
-This bot can post the image generation parameters stored in the metadata of an image, posted to your Discord server.
+This bot can post the image generation parameters stored in the metadata of an image, posted to your Discord server. When discussing and sharing AI images, its common to want to see how an image was created. Without such a tool as this, users must download the image and open in some app to see that info. Much more convenient to view that info inline.
 
-metaDataBot is public, and available for install on any Discord server. metaDataBot runs on MacOS
+metaDataBot is public, and available for install on any Discord server. metaDataBot requires **PRESENCE INTENT**, **SERVER MEMBERS INTENT**, and **MESSAGE CONTENT INTENT** on your server. metaDataBot runs on MacOS. metaDataBot doesn't like it when you take about them in the third person, even though they're standing right there.
 
 ### Usage
 
@@ -36,5 +36,5 @@ You can also DM Me an image to see its metadata
 Acquiring data:
 metaDataBot looks for EXIF data in the image, which is usually (but not always? what are the criteria) stripped by Discord. EXIF is preferred because it is valid JSON. If no exif found, it looks for TIFF dictionary. Data from EXIF has the prompt field labeled as "c", and the negative prompt as "uc". Those are relabeled as "prompt" and "negative_prompt". All other fields are passed straight through.
 
-metadata is posted as a text file
+metadata is posted as an attached text file
 
