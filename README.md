@@ -10,7 +10,8 @@ metaDataBot is public, and available for install on any Discord server. metaData
 Bot can respond to all images, or none, or just on request. It can post just the image prompts, or their full list of parameters. It also works via DM - DM the bot an image to get its parameters. You can summon the bot with @ParamPeek to see parameters of the most recently posted image in a channel.  
 type `exifbot help` to see its commands
 
->exifbot help
+>exifbot help  
+
 ```
 exifbot commands:
 Precede commands with "exifbot ", eg: "exifbot lastimage"
@@ -33,15 +34,14 @@ You can also DM Me an image to see its metadata
 
 metaDataBot looks for EXIF data in the image, which is usually (but not always? what are the criteria) stripped by Discord. EXIF is preferred because it is valid JSON. If no exif found, it looks for TIFF dictionary. Data from EXIF has the prompt field labeled as "c", and the negative prompt as "uc". Those are relabeled as "prompt" and "negative_prompt". All other fields are passed straight through.
 
-metadata is posted as an attached text file
+Metadata is posted as an attached text file
 
 <img width="683" alt="Screenshot 2024-03-17 at 1 37 59 PM" src="https://github.com/S1D1T1/metaDataBot/assets/156350598/2b8ff4f1-3a44-4c1e-9ec5-45800e67dc75">
 
 
-### Building  
-You can build the bot in xcode from this source, but it won't be able to log in to discord - the confidential token has been removed. There can be only one.
+### Build & Run  
+This source compiles the Discord bot executable. For the bot to actually log in to Discord, you need a confidential token obtained from the [Discord Developer Portal](https://discord.com/developers/applications). After acquiring the token, enter it into the file, `runbot.sh`. Ensure both `runbot.sh` and the discordbot executable are in the same folder. To run the bot, navigate to this folder in the terminal and execute `sh ./runbot.sh`
 
 ### Acknowledments
-
 The awesome community on the [Draw Things discord.](https://discord.gg/Zx9VXSqQUK)  
 Built on [Defxult/Discord Bot](https://github.com/Defxult/Discord.swift)
