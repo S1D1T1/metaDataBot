@@ -3,7 +3,7 @@ Discord Bot that displays the DNA of an AI generated image.
 
 This bot can post the image generation parameters stored in the metadata of an image which is posted on Discord. When discussing and sharing AI images, one typically wishes to see how an image was created. Without such a tool, users must download the image and open in some app to see that info. This bot displays it conveniently inline.
 
-metaDataBot is public, and available for install on any Discord server. metaDataBot requires `PRESENCE INTENT`, `SERVER MEMBERS INTENT`, and `MESSAGE CONTENT INTENT` on your server. metaDataBot runs on MacOS. metaDataBot doesn't like it when you take about them in the third person, even though they're standing right there.
+metaDataBot is public, and available for install on any Discord server. metaDataBot requires `PRESENCE INTENT`, `SERVER MEMBERS INTENT`, and `MESSAGE CONTENT INTENT` on your server. metaDataBot runs on MacOS. metaDataBot doesn't like it when you take about them in the third person, when they're standing right there.
 
 ### Usage
 
@@ -34,6 +34,12 @@ You can also DM Me an image to see its metadata
 metaDataBot looks for EXIF data in the image, which is usually (but not always? what are the criteria) stripped by Discord. EXIF is preferred because it is valid JSON. If no exif found, it looks for TIFF dictionary. Data from EXIF has the prompt field labeled as "c", and the negative prompt as "uc". Those are relabeled as "prompt" and "negative_prompt". All other fields are passed straight through.
 
 metadata is posted as an attached text file
+
+<img width="683" alt="Screenshot 2024-03-17 at 1 37 59 PM" src="https://github.com/S1D1T1/metaDataBot/assets/156350598/2b8ff4f1-3a44-4c1e-9ec5-45800e67dc75">
+
+
+### Building  
+You can build the bot in xcode from this source, but it won't be able to log in to discord - the confidential token has been removed. There can be only one.
 
 ### Acknowledments
 
