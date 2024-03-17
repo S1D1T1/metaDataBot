@@ -7,7 +7,7 @@ metaDataBot is public, and available for install on any Discord server. metaData
 
 ### Usage
 
-Bot can respond to all images, or none, or just on request. It can post just the image prompts, or their full list of parameters. It also works via DM - DM an image to get its parameters. You can summon the bot with @ParamPeek to see parameters of the most recently posted image in a channel.  
+Bot can respond to all images, or none, or just on request. It can post just the image prompts, or their full list of parameters. It also works via DM - DM the bot an image to get its parameters. You can summon the bot with @ParamPeek to see parameters of the most recently posted image in a channel.  
 type `exifbot help` to see its commands
 
 >exifbot help
