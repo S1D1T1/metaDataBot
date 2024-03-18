@@ -21,7 +21,7 @@ class ExifbotState {
   // stats
   @AppStorage("imageCount") var imageCount = 0
   @AppStorage("maxParameters") var maxParameters = 0
-  @AppStorage("startDate") var startDate = Date().description
+  @AppStorage("startDate") var startDate = ""
 
   init() {
     let  myIntents:Set<Intents> = [.guildMessages,.messageContent,.dmMessages]
@@ -36,6 +36,7 @@ class ExifbotState {
       // set status when connected
       let presenceString = "Pics, posting params"
       self.bot.updatePresence(status:.online , activity:.watching(presenceString))
+      if self.startDate.isEmpty { self.startDate = Date().description }
     }
   }
 }
@@ -60,7 +61,6 @@ Precede commands with "exifbot ", eg: "exifbot lastimage"
   **full**: post metadata after all images (default)
 ### Other
   **wrong**: report incorrect or badly formatted image data
-  **version**: version info
   **about**: about exifbot
   **help**: show this message
 
@@ -69,10 +69,10 @@ You can also DM Me an image to see its metadata
 
 let aboutString =
 """
-Credits:
 exifbot version 0.1
 MIT License
 copyright(c) 2024 @sodot0
+<https://github.com/S1D1T1/metaDataBot>
 
 Built using Discord Swift library by @Defxult. MIT License
 <https://github.com/Defxult/Discord.swift>
@@ -184,9 +184,6 @@ class ExifbotListener : EventListener {
     else if message.content == "hi exifbot" {
       say("Hello",message.channel)
     }
-    else if message.content.lowercased() == "exifbot version" {
-      say("Exifbot version 0.1",message.channel)
-    }
 
     else if message.content.lowercased() == "exifbot mute" {
       setExifMode("muting",.muteMode,message)
@@ -226,7 +223,7 @@ class ExifbotListener : EventListener {
 
 
           if let user = message.author.displayName {
-            say("### thanks for posting an image \(user)",message.channel)
+            say("###  \(user) posted an image.",message.channel)
             log("image posted by \(user)",message.channel)
             exifbotState.imageCount += 1
             log("Image Count: \(exifbotState.imageCount)")
