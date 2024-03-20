@@ -13,8 +13,21 @@ import AppKit //  Core graphics
 // MARK: Image Metadata parsing
 
 // post metadata about the image at this url, in the provided channel
-func handleImage(_ u:URL, _ channel:Messageable){
+func handleImage(_ u:URL, _ message:Message){
+
+  let channel = message.channel
   if let params =   getEmbeddedParamString(u) {
+    
+    // this will branch out to other special cases to ignore.
+    if params == "Screenshot" {return}
+    
+    if let user = message.author.displayName {
+      say("###  \(user) posted an image.",message.channel)
+      log("image posted by \(user)",message.channel)
+      exifbotState.imageCount += 1
+      log("Image Count: \(exifbotState.imageCount)")
+    }
+
     if let dictionary = JsonStringtoDict(params) {
       // here we go. translations
       let translatedParams = translateParams(dictionary)

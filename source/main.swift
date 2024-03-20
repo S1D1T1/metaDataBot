@@ -163,7 +163,7 @@ class ExifbotListener : EventListener {
     if let u = URL(string: attachment.url) {
       log(attachment.url)
       exifbotState.lastURL = attachment.url
-      handleImage(u,message.channel)
+      handleImage(u,message)
       return
     }
   }
@@ -220,16 +220,6 @@ class ExifbotListener : EventListener {
       for attachment in message.attachments {
         if let theType = attachment.contentType,
            theType.starts(with: "image/") {
-
-
-          if let user = message.author.displayName {
-            say("###  \(user) posted an image.",message.channel)
-            log("image posted by \(user)",message.channel)
-            exifbotState.imageCount += 1
-            log("Image Count: \(exifbotState.imageCount)")
-          }
-
-
           processImage(attachment, message)
         }
       }
