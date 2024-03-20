@@ -25,7 +25,6 @@ Modes:
   full: post metadata after all images (default)  
 Other  
   wrong: report incorrect or badly formatted image data  
-  version: version info  
   about: about exifbot  
   help: show this message  
 
