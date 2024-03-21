@@ -149,7 +149,7 @@ class ExifbotListener : EventListener {
            theType.starts(with: "image/") {
           // post a link to the message we found
           say(aMessage.jumpUrl,message.channel)
-          processImage(aMessage.attachments[0],message)
+          processImage(aMessage.attachments[0],aMessage)
           return
         }
       }

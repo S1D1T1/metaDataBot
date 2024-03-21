@@ -34,7 +34,7 @@ You can also DM Me an image to see its metadata
 
 metaDataBot looks for EXIF data in the image, which Discord usually strips off (but not always? what are the criteria). EXIF is preferred because it is valid JSON. If no exif found, it looks for TIFF dictionary. Data from EXIF has the prompt field labeled as "c", and the negative prompt as "uc". Those are relabeled as "prompt" and "negative_prompt". All other fields are passed straight through.
 
-Metadata is posted as an attached text file
+Metadata is posted as an attached text file. Reason for it being a file as opposed to inline text is just to be less obtrusive - file attachments can collapse down.
 
 <img width="683" alt="Screenshot 2024-03-17 at 1 37 59 PM" src="https://github.com/S1D1T1/metaDataBot/assets/156350598/2b8ff4f1-3a44-4c1e-9ec5-45800e67dc75">
 
