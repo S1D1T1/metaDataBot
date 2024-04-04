@@ -17,10 +17,10 @@ func handleImage(_ u:URL, _ message:Message){
 
   let channel = message.channel
   if let params =   getEmbeddedParamString(u) {
-    
+
     // this will branch out to other special cases to ignore.
     if params == "Screenshot" {return}
-    
+
     if let user = message.author.displayName {
       say("###  \(user) posted an image.",message.channel)
       log("image posted by \(user)",message.channel)
@@ -36,7 +36,7 @@ func handleImage(_ u:URL, _ message:Message){
         if let jsonString = String(data: jsonData, encoding: .utf8) {
           log("posting \(translatedParams.count) params as json")
           trackParameterHighScore(translatedParams.count, channel:channel)
-          sendAsFile("\(jsonString)",filename:"metadata.js", channel) //  send as a js file since this is actual valid json
+          sendAsFile("\(jsonString)",filename:"metadata.txt", channel) //  send as a js file since this is actual valid json
         }
       }
       catch{}
@@ -46,6 +46,9 @@ func handleImage(_ u:URL, _ message:Message){
       announceDescriptionString(params,channel)
     }
   }
+  else {
+    say("Sorry, I didn't find any Metadata attached to this image",message.channel)
+    }
 }
 
 // translation table for parameters which are in well-formed json.

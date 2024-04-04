@@ -3,3 +3,4 @@ xcuserdata/
 .swift-version
 .swiftpm
 runbot.sh
+local only/

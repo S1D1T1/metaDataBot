@@ -15,7 +15,7 @@ import AppKit
 class ExifbotState {
   var bot:Bot
   var saveLogString = ""  // use new sys logging feature
-  var botState:responseMode = .normalMode
+  var botState:responseMode = .muteMode
   var lastURL = ""
 
   // stats
@@ -34,7 +34,7 @@ class ExifbotState {
     self.bot.once {
 
       // set status when connected
-      let presenceString = "Pics, posting params"
+      let presenceString = "Pics. @ParamPeek for metadata"
       self.bot.updatePresence(status:.online , activity:.watching(presenceString))
       if self.startDate.isEmpty { self.startDate = Date().description }
     }
@@ -49,17 +49,14 @@ var exifbotState = ExifbotState()
 
 let helpString =
 """
+@ParamPeek to post metadata of images
+If you @ Me in a *reply* to an image post, I'll examine that image.
+
 ## exifbot commands:
 
 Precede commands with "exifbot ", eg: "exifbot lastimage"
 
-  **lastimage** OR @ParamPeek: display the metadata for the most recent image posted in the current channel
-### Modes:
-  **mute**: report image metadata only when requested, via 'lastimage'
-  **unmute**: post metadata after all images (default)
-  **brief**: display only prompt & negative prompt
-  **full**: post metadata after all images (default)
-### Other
+  **lastimage**: display the metadata for the most recent image posted in the current channel
   **wrong**: report incorrect or badly formatted image data
   **about**: about exifbot
   **help**: show this message
@@ -69,7 +66,7 @@ You can also DM Me an image to see its metadata
 
 let aboutString =
 """
-exifbot version 0.1
+exifbot version 0.2
 MIT License
 copyright(c) 2024 @sodot0
 <https://github.com/S1D1T1/metaDataBot>
@@ -83,6 +80,13 @@ Thanks for the feedback. We'll take a look.
 Feel free to DM me any details about what was wrong
 """
 
+/*
+### Modes:
+  **mute**: report image metadata only when requested, via 'lastimage'
+  **unmute**: post metadata after all images (default)
+  **brief**: display only prompt & negative prompt
+  **full**: post metadata after all images (default)
+*/
 
 runbot()  //  this never returns
 
@@ -108,8 +112,6 @@ func runbot() {
 //  Task{
 //    try! await bot.syncApplicationCommands() // Only needs to be done once
 //  }
-
-  // updateBotActivity(state: .normalMode,bot:bot)  //  crash
   bot.run()
 }
 
@@ -118,13 +120,13 @@ class ExifbotListener : EventListener {
 
   func setExifMode(_ response:String, _ mode:responseMode, _ message: Message) {
     say (response,message.channel)
-    exifbotState.botState = mode
+    exifbotState.botState = mode    //  † not scalable. Needs to be on a per-server basis
 
     // display current activity level
 
     switch exifbotState.botState {
       case .muteMode:
-        presenceString = "None"
+        presenceString = "Pics. @me for metadata"
         log("setting mode: mute",message.channel)
 
       case .normalMode:
@@ -149,7 +151,7 @@ class ExifbotListener : EventListener {
            theType.starts(with: "image/") {
           // post a link to the message we found
           say(aMessage.jumpUrl,message.channel)
-          processImage(aMessage.attachments[0],aMessage)
+          postImageMetadata(aMessage.attachments[0],aMessage)
           return
         }
       }
@@ -157,8 +159,8 @@ class ExifbotListener : EventListener {
     catch {}
   }
 
-//  post metadata of the image attached to this message, in this channel
-  func processImage(_ attachment: Message.Attachment, _ message: Message) {
+///  post metadata of the image attached to this message, in this channel
+  func postImageMetadata(_ attachment: Message.Attachment, _ message: Message) {
 
     if let u = URL(string: attachment.url) {
       log(attachment.url)
@@ -168,7 +170,17 @@ class ExifbotListener : EventListener {
     }
   }
 
-  //  watch messages & respond
+  /// check message for image attachments, post metadata if found.
+  fileprivate func processImagePost(_ message: Message) {
+    for attachment in message.attachments {
+      if let theType = attachment.contentType,
+         theType.starts(with: "image/") {
+        postImageMetadata(attachment, message)
+      }
+    }
+  }
+  
+  ///  watch messages & respond
   override func onMessageCreate(message: Message) async {
     // Don't respond to our own message
     guard !message.author.isBot else {
@@ -176,7 +188,18 @@ class ExifbotListener : EventListener {
     }
     // MARK: Bot Commands
 
-    if message.isMentioned || message.content.lowercased() == "exifbot lastimage" {
+    if message.isMentioned{
+      if let referencedMessage = message.referencedMessage {
+        say("Getting metadata for referenced Message:",message.channel)
+        say(referencedMessage.jumpUrl,referencedMessage.channel)
+        processImagePost(referencedMessage)
+      }
+      else {
+        say("Getting metadata for most recent image in this channel",message.channel)
+        await lastImage(message)
+      }
+    }
+    else if message.content.lowercased() == "exifbot lastimage" {
       say("Getting metadata for most recent image in this channel",message.channel)
       await lastImage(message)
     }
@@ -184,6 +207,8 @@ class ExifbotListener : EventListener {
     else if message.content == "hi exifbot" {
       say("Hello",message.channel)
     }
+
+/*
 
     else if message.content.lowercased() == "exifbot mute" {
       setExifMode("muting",.muteMode,message)
@@ -199,6 +224,9 @@ class ExifbotListener : EventListener {
     else if message.content.lowercased() == "exifbot full" {
       setExifMode("full metadata",.normalMode,message)
     }
+*/
+
+
 
     else if message.content.lowercased() == "exifbot about" {
       aboutExifBot(message.channel)
@@ -217,12 +245,7 @@ class ExifbotListener : EventListener {
     // MARK: Image Attachments
     else if !message.attachments.isEmpty,
             exifbotState.botState != .muteMode {
-      for attachment in message.attachments {
-        if let theType = attachment.contentType,
-           theType.starts(with: "image/") {
-          processImage(attachment, message)
-        }
-      }
+      processImagePost(message)
     }
   }
 }
