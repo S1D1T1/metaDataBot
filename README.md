@@ -1,4 +1,4 @@
-# Update: the exif bot is indefinitely paused. The discord library I based it on had connection issues i couldn't resolve.
+### Update: the exif bot is indefinitely paused. The discord library I based it on had connection issues i couldn't resolve.
 
 # metaDataBot
 Discord Bot that displays the DNA of an AI generated image. 
